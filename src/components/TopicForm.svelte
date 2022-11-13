@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { addTopic } from '../stores/topicStores';
 
-	let topic: Topic = { topic: null, minPages: null, maxPages: null, numPotentialReaders: null };
+	let topic: Topic = { topic: "", minPages: 0, maxPages: 0, numPotentialReaders: 0 };
 
 	const save = () => {
 		addTopic(topic);
-		topic = { topic: null, minPages: null, maxPages: null, numPotentialReaders: null };
+		topic = { topic: "", minPages: 0, maxPages: 0, numPotentialReaders: 0 };
 	};
 </script>
 

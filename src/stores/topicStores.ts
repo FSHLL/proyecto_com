@@ -14,13 +14,17 @@ export const deleteTopic = async (index: number) => {
     });
 };
 
-export const sendTopics = async () => {
-    let val
+export const sendTopics = async (total_paginas=10) => {
+    let val:Topic[] = []
     topics.subscribe($ => val = $)()
-  
-    const data = await fetch('api/solve', {
+    const json_req = {
+        topics: val,
+        total_paginas: total_paginas
+    }
+    const solution = await fetch('api/solve', {
         method: 'POST',
-        body: JSON.stringify(val)
+        body: JSON.stringify(json_req)
     })
 
+    return await solution.json()
 };

@@ -6,32 +6,44 @@ import type { Topic } from '$lib/types/Topic';
 export const POST: RequestHandler = async ({ request }) => {
 
     const m = new EmbeddedMiniZinc();
- 
-    const model = `% Baking cakes for the school fete
+    const topics:string[] = []
+    const min_pages:int[] = []
+    const max_pages:int[] = []
+    const lectors:int[] = []
+    const body = await request.json()
+    body.topics.map((topic:Topic) => {
+        topics.push(topic.topic)
+        min_pages.push(topic.minPages)
+        max_pages.push(topic.maxPages)
+        lectors.push(topic.numPotentialReaders)
+    })
 
-    var 0..100: b; % no. of banana cakes
-    var 0..100: c; % no. of chocolate cakes
+    const model = `
+    int: n;
+    int: paginas;
     
-    % flour
-    constraint 250*b + 200*c <= 4000;
-    % bananas
-    constraint 2*b  <= 6;
-    % sugar
-    constraint 75*b + 150*c <= 2000;
-    % butter
-    constraint 100*b + 150*c <= 500;
-    % cocoa
-    constraint 75*c <= 500;
+    array[1..n] of int: pagMin;
+    array[1..n] of int: pagMax;
+    array[1..n] of int: lectores;
     
-    % maximize our profit
-    solve maximize 400*b + 450*c;`;
+    array[1..n] of var int: datos;
     
-    const result = await m.solve(model);
+    constraint forall(i in 1..n) (datos[i] >= 0 \\/ datos[i] >= pagMin[i]);
+    constraint forall(j in 1..n) (datos[j] <= pagMax[j]);
+    constraint sum(k in 1..n) (datos[k]) <= paginas;
+    solve maximize sum(l in 1..n) (datos[l] * lectores[l]);
+    `;
+    const data = `
+        n = ${topics.length};
+        paginas = ${body.total_paginas};
+        pagMin = [${min_pages}];
+        pagMax = [${max_pages}];
+        lectores = [${lectors}];
+    `
+    const result = await m.solve(model, data);
     console.log(result);
 
-	const data = await request.json();
-
-	return json(data);
+	return json(result);
 };
 
 export const GET: RequestHandler = ({ url }) => {

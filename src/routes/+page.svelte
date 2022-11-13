@@ -2,6 +2,18 @@
 	import Topics from '../components/Topics.svelte';
 	import TopicForm from '../components/TopicForm.svelte';
 	import { sendTopics } from '../stores/topicStores';
+	import {Chart} from "chart.js/dist/chart.min";
+
+	$: paginas = 10;
+
+	function handle_change(e) {
+		paginas = e.target.value;
+	}
+
+	let solve = async (e) => {
+		let resultado = await sendTopics(paginas)
+		console.log(resultado)
+	}
 </script>
 
 <div class="container">
@@ -21,7 +33,7 @@
             <strong>Total páginas</strong>
 		</p>
 		<p class="control">
-			<input class="input" type="number" value="10" />
+			<input class="input" type="number" value="10" on:change={handle_change}/>
 		</p>
 	</div>
 
@@ -29,5 +41,8 @@
 
 	<Topics />
 
-	<button class="button" on:click={sendTopics}>Send</button>
+	<button class="button" on:click={solve}>Resolver</button>
+
+
+	<div id="myChart"></div>
 </div>
