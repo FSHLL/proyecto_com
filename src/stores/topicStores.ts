@@ -26,5 +26,8 @@ export const sendTopics = async (total_paginas=10) => {
         body: JSON.stringify(json_req)
     })
 
-    return await solution.json()
+    return {
+        solution: await solution.json(),
+        names: val.map(t => t.topic)
+    }
 };

@@ -2,18 +2,51 @@
 	import Topics from '../components/Topics.svelte';
 	import TopicForm from '../components/TopicForm.svelte';
 	import { sendTopics } from '../stores/topicStores';
-	import {Chart} from "chart.js/dist/chart.min";
+	import Chart from '../components/Chart.svelte';
 
 	$: paginas = 10;
+	$: resultado = null
+	$: data = null
 
 	function handle_change(e) {
 		paginas = e.target.value;
 	}
 
-	let solve = async (e) => {
-		let resultado = await sendTopics(paginas)
-		console.log(resultado)
+	let solve = async () => {
+		resultado = null
+		document.getElementById("solve").classList.add('is-loading');
+		document.getElementById("solve").classList.add('disabled');
+		resultado = await sendTopics(paginas)
+		document.getElementById("solve").className = "button";
+		const regex = /[0-9]/g;
+		data = {
+			labels: resultado.names,
+			datasets: [
+				{
+					label: 'Nro de Paginas',
+					data: resultado.solution.solutions[0]?.extraOutput?.split("[")[1]?.match(regex),
+					backgroundColor: [
+						'rgba(255, 134, 159, 0.4)',
+						'rgba(98,  182, 239, 0.4)',
+						'rgba(255, 218, 128, 0.4)',
+						'rgba(113, 205, 205, 0.4)',
+						'rgba(170, 128, 252, 0.4)',
+						'rgba(255, 177, 101, 0.4)',
+					],
+					borderWidth: 2,
+					borderColor: [
+						'rgba(255, 134, 159, 1)',
+						'rgba(98,  182, 239, 1)',
+						'rgba(255, 218, 128, 1)',
+						'rgba(113, 205, 205, 1)',
+						'rgba(170, 128, 252, 1)',
+						'rgba(255, 177, 101, 1)',
+					],
+				},
+			],
+		};
 	}
+
 </script>
 
 <div class="container">
@@ -41,8 +74,9 @@
 
 	<Topics />
 
-	<button class="button" on:click={solve}>Resolver</button>
-
-
-	<div id="myChart"></div>
+	<button id="solve" class="button" on:click={solve}>Resolver</button>
+	<br>
+	{#if resultado}
+		<Chart data={data}/>
+	{/if}
 </div>
