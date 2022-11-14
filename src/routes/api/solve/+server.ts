@@ -7,9 +7,9 @@ export const POST: RequestHandler = async ({ request }) => {
 
     const m = new EmbeddedMiniZinc();
     const topics:string[] = []
-    const min_pages:int[] = []
-    const max_pages:int[] = []
-    const lectors:int[] = []
+    const min_pages:any[] = []
+    const max_pages:any[] = []
+    const lectors:any[] = []
     const body = await request.json()
     body.topics.map((topic:Topic) => {
         topics.push(topic.topic)
