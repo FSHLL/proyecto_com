@@ -32,8 +32,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"chart.js": "^3.8.0",
 		"minizinc": "^3.0.2",
-		"svelte-chartjs": "^3.0.0"
+		"svelte-chartjs": "^3.0.1"
 	}
 }
