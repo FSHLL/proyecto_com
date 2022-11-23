@@ -32,6 +32,7 @@ export const POST: RequestHandler = async ({ request }) => {
     constraint forall(j in 1..n) (datos[j] <= pagMax[j]);
     constraint sum(k in 1..n) (datos[k]) <= paginas;
     solve maximize sum(l in 1..n) (datos[l] * lectores[l]);
+    output ["{%datos%:", show(datos), ", %lectores%:", show(sum(l in 1..n) (datos[l] * lectores[l])), "}"]
     `;
     const data = `
         n = ${topics.length};

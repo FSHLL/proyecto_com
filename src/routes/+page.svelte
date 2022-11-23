@@ -16,15 +16,16 @@
 		resultado = null
 		document.getElementById("solve").classList.add('is-loading');
 		document.getElementById("solve").classList.add('disabled');
-		resultado = await sendTopics(paginas)
+		const res = await sendTopics(paginas)
 		document.getElementById("solve").className = "button";
-		const regex = /[0-9]/g;
+		resultado =  JSON.parse(res.solution.solutions[0]?.extraOutput.replaceAll("%", "\""))
+		console.log(resultado)
 		data = {
-			labels: resultado.names,
+			labels: res.names,
 			datasets: [
 				{
 					label: 'Nro de Paginas',
-					data: resultado.solution.solutions[0]?.extraOutput?.split("[")[1]?.match(regex),
+					data: resultado.datos,
 					backgroundColor: [
 						'rgba(255, 134, 159, 0.4)',
 						'rgba(98,  182, 239, 0.4)',
@@ -76,7 +77,9 @@
 
 	<button id="solve" class="button" on:click={solve}>Resolver</button>
 	<br>
+	<br>
 	{#if resultado}
+		<h4>Lectores potenciales: {resultado.lectores}</h4>
 		<Chart data={data}/>
 	{/if}
 </div>
