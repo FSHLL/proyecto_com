@@ -33,7 +33,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"minizinc": "^3.0.2",
+		"minizinc": "^4.0.1-edge.5",
 		"svelte-chartjs": "^3.0.1"
 	}
 }

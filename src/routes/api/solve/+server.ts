@@ -1,11 +1,11 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import EmbeddedMiniZinc from 'minizinc/build/EmbeddedMiniZinc';
+import * as MiniZinc from 'minizinc';
 import type { Topic } from '$lib/types/Topic';
 
 export const POST: RequestHandler = async ({ request }) => {
 
-    const m = new EmbeddedMiniZinc();
+    const m = new MiniZinc.Model();
     const topics:string[] = []
     const min_pages:any[] = []
     const max_pages:any[] = []
@@ -41,29 +41,18 @@ export const POST: RequestHandler = async ({ request }) => {
         pagMax = [${max_pages}];
         lectores = [${lectors}];
     `
-    const result = await m.solve(model, data);
-    console.log(result);
 
-	return json(result);
-};
+    m.addString(model);
+    m.addDznString(data);
 
-export const GET: RequestHandler = ({ url }) => {
-    let data = 'n=';
-    const totalPages = Number(url.searchParams.get('totalPages') ?? '0');
-    const topics:Topic[] = JSON.parse(url.searchParams.get('topics') ?? '');
-    
-    data += totalPages + '\n \n';
-    
-    topics.forEach(topic => {
-        data += `topic=${topic.topic}\n`;
-        data += `minPages=${topic.minPages}\n`;
-        data += `maxPages=${topic.maxPages}\n`;
-        data += `numPotentialReaders=${topic.numPotentialReaders}\n \n`;
-    });
+    const result = await m.solve({
+        options: {
+          solver: 'Chuffed',
+          'all-solutions': true
+        }
+      });
 
-    if (!totalPages || !topics) {
-        throw error(400, 'Topics or total pages undefined');
-    }
-   
-    return new Response(data)
+    const solution = result.solution?.output.raw?.replaceAll("%", "\"")
+
+	return json(JSON.parse(solution));
 };

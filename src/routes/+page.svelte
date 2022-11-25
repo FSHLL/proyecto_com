@@ -6,7 +6,7 @@
 
 	$: paginas = 10;
 	$: resultado = null
-	$: data = null
+	$: data = {}
 
 	function handle_change(e) {
 		paginas = e.target.value;
@@ -14,11 +14,11 @@
 
 	let solve = async () => {
 		resultado = null
-		document.getElementById("solve").classList.add('is-loading');
-		document.getElementById("solve").classList.add('disabled');
+		document.getElementById("solve")?.classList.add('is-loading');
+		document.getElementById("solve")?.classList.add('disabled');
 		const res = await sendTopics(paginas)
 		document.getElementById("solve").className = "button";
-		resultado =  JSON.parse(res.solution.solutions[0]?.extraOutput.replaceAll("%", "\""))
+		resultado = res.solution
 		console.log(resultado)
 		data = {
 			labels: res.names,
