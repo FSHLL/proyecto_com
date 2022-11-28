@@ -4,3 +4,5 @@ COPY package.json package.json
 
 # Add your source files
 COPY . .
+
+CMD ["npm","start"]
