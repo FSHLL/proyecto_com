@@ -1,7 +1,7 @@
 FROM minizinc/minizinc
 
 COPY package.json package.json
-RUN apt install nodejs
+RUN apk add --update nodejs npm
 
 # Add your source files
 COPY . .
