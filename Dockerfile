@@ -1,11 +1,12 @@
 FROM minizinc/minizinc
 
+USER root
+
 COPY package.json package.json
 RUN apt update
 RUN apt -y install curl
-RUN (curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash)
-RUN \. $HOME/.nvm/nvm.sh && \. "$HOME/.nvm/bash_completion" && export NVM_DIR="$HOME/.nvm"
-RUN ~/.bashrc
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+RUN source ~/.bashrc
 RUN nvm install --lts
 RUN npm install
 RUN npm run build
