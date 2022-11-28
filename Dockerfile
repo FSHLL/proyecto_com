@@ -3,7 +3,7 @@ FROM minizinc/minizinc
 COPY package.json package.json
 RUN apt update
 RUN apt install nodejs
-RUN apt install npm
+RUN apt install npm -y
 RUN npm install
 RUN npm run build
 
