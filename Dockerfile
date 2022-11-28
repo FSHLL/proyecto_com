@@ -2,6 +2,7 @@ FROM minizinc/minizinc
 
 COPY package.json package.json
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
+RUN ~/.bashrc
 RUN nvm install --lts
 RUN npm install
 RUN npm run build
