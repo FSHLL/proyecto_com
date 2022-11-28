@@ -1,8 +1,6 @@
-FROM alpine:latest
+FROM minizinc/minizinc
 
 COPY package.json package.json
-RUN apk update && apk upgrade
-RUN apk add minizinc
 
 # Add your source files
 COPY . .
