@@ -7,6 +7,7 @@
 	$: paginas = 10;
 	$: resultado = null
 	$: data = {}
+	$: errors = []
 
 	function handle_change(e) {
 		paginas = e.target.value;
@@ -19,13 +20,13 @@
 		const res = await sendTopics(paginas)
 		document.getElementById("solve").className = "button";
 		resultado = res.solution
-		console.log(resultado)
+		errors = res.errors
 		data = {
 			labels: res.names,
 			datasets: [
 				{
 					label: 'Nro de Paginas',
-					data: resultado.datos,
+					data: resultado.cantidad,
 					backgroundColor: [
 						'rgba(255, 134, 159, 0.4)',
 						'rgba(98,  182, 239, 0.4)',
@@ -78,8 +79,16 @@
 	<button id="solve" class="button" on:click={solve}>Resolver</button>
 	<br>
 	<br>
-	{#if resultado}
-		<h4>Lectores potenciales: {resultado.lectores}</h4>
+	{#if resultado !== null && resultado?.lectores}
+		<h4>Lectores potenciales: {parseInt(resultado.lectores).toLocaleString('es-CO')}</h4>
 		<Chart data={data}/>
+	{/if}
+
+	{#if errors}
+		{#each errors as error}
+			<div class="alert alert-danger">
+				${error}
+			</div>
+		{/each}
 	{/if}
 </div>
