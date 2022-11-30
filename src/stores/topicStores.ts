@@ -31,9 +31,10 @@ export const sendTopics = async (total_paginas=10) => {
 
     const solution = await fetch('https://back-minizinc.herokuapp.com/solve', {
         method: 'POST',
-        //mode: 'no-cors',
+        mode: 'cors',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
         },
         body: JSON.stringify({
             n: n,
